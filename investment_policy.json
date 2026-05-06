@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "currency": "TWD",
+  "as_of": "2026-05-06",
+  "goals": {
+    "target_profit_ntd": 1000000,
+    "target_deadline": "2026-12-31",
+    "principal_ntd": 5000000,
+    "planned_allocation_ntd": {
+      "active": 3000000,
+      "conservative": 2000000
+    },
+    "implied_target_return_on_principal": 0.2,
+    "notes": [
+      "目標為「年底實現獲利超過 100 萬」；500 萬本金約對應 20% 總報酬，難度高，實際結果取決於市場與個別標的。",
+      "此檔為本人資金計畫與部位分組設定，非投資建議；請自行檢視風險並必要時諮詢專業顧問。"
+    ]
+  },
+  "bucket_definitions": {
+    "active": "積極：槓桿／主題／主動增長型商品，或單一產業、波動較高之個股（依您承受度自行調整清單）。",
+    "conservative": "保守：指數型 ETF、REIT、大型權值、金融配息等相對防禦或現金流取向（依您定義可改 bucket）。"
+  },
+  "symbol_buckets": {
+    "00631L.TW": "active",
+    "00712.TW": "conservative",
+    "00918.TW": "conservative",
+    "00981A.TW": "active",
+    "00946.TW": "active",
+    "1432.TW": "active",
+    "2330.TW": "conservative",
+    "2801.TW": "conservative",
+    "2812.TW": "conservative",
+    "2880.TW": "conservative",
+    "2883.TW": "conservative",
+    "2884.TW": "conservative",
+    "2886.TW": "conservative",
+    "2891.TW": "conservative",
+    "3037.TW": "active",
+    "5880.TW": "conservative",
+    "6757.TW": "active",
+    "9945.TW": "active"
+  },
+  "book_cost_snapshot_ntd": {
+    "source": "portfolio.json total_cost 加總依 symbol_buckets 分攤",
+    "active": 1223461,
+    "conservative": 2921047,
+    "total_equity_book_cost": 4144508
+  },
+  "alignment_notes": [
+    "計畫資金配置為「積極 300 萬／保守 200 萬」；目前股票帳面成本約 414.5 萬，其中積極約 122.3 萬、保守約 292.1 萬（與 portfolio.json 加總一致）。",
+    "與計畫相比：保守帳面高於 200 萬目標、積極低於 300 萬目標；可能尚有現金、未建倉部位，或需再平衡。若追求年底高獲利目標，須留意提高積極比重通常也提高波動與回撤風險。"
+  ]
+}
