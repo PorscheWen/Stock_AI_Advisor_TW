@@ -1,5 +1,5 @@
 {
-  "version": 1,
+  "version": 2,
   "currency": "TWD",
   "as_of": "2026-05-06",
   "goals": {
@@ -7,18 +7,19 @@
     "target_deadline": "2026-12-31",
     "principal_ntd": 5000000,
     "planned_allocation_ntd": {
-      "active": 3000000,
-      "conservative": 2000000
+      "active": 2500000,
+      "conservative": 2500000
     },
     "implied_target_return_on_principal": 0.2,
     "notes": [
       "目標為「年底實現獲利超過 100 萬」；500 萬本金約對應 20% 總報酬，難度高，實際結果取決於市場與個別標的。",
+      "資金計畫為積極／保守各 250 萬（合計 500 萬），與股票帳面成本之差額見 gaps_vs_planned_ntd。",
       "此檔為本人資金計畫與部位分組設定，非投資建議；請自行檢視風險並必要時諮詢專業顧問。"
     ]
   },
   "bucket_definitions": {
-    "active": "積極：槓桿／主題／主動增長型商品，或單一產業、波動較高之個股（依您承受度自行調整清單）。",
-    "conservative": "保守：指數型 ETF、REIT、大型權值、金融配息等相對防禦或現金流取向（依您定義可改 bucket）。"
+    "active": "積極：槓桿／主題／主動增長型商品、台積電等大型權值若列為進攻部位，或單一產業、波動較高之個股（依您承受度自行調整清單）。",
+    "conservative": "保守：指數型 ETF、REIT、金融配息等相對防禦或現金流取向（依您定義可改 bucket）。"
   },
   "symbol_buckets": {
     "00631L.TW": "active",
@@ -27,7 +28,7 @@
     "00981A.TW": "active",
     "00946.TW": "active",
     "1432.TW": "active",
-    "2330.TW": "conservative",
+    "2330.TW": "active",
     "2801.TW": "conservative",
     "2812.TW": "conservative",
     "2880.TW": "conservative",
@@ -42,12 +43,21 @@
   },
   "book_cost_snapshot_ntd": {
     "source": "portfolio.json total_cost 加總依 symbol_buckets 分攤",
-    "active": 1223461,
-    "conservative": 2921047,
+    "active": 2277411,
+    "conservative": 1867097,
     "total_equity_book_cost": 4144508
   },
+  "gaps_vs_planned_ntd": {
+    "planned_active": 2500000,
+    "planned_conservative": 2500000,
+    "book_active": 2277411,
+    "book_conservative": 1867097,
+    "active_gap_to_planned": 222589,
+    "conservative_gap_to_planned": 632903,
+    "note": "差額＝計畫金額 − 目前股票帳面成本（正值代表該 bucket 尚須加碼約此數才達 250 萬；未含現金或其他資產）。兩項差額合計 855,492，約當股票部位與 500 萬全額配置間之空間。"
+  },
   "alignment_notes": [
-    "計畫資金配置為「積極 300 萬／保守 200 萬」；目前股票帳面成本約 414.5 萬，其中積極約 122.3 萬、保守約 292.1 萬（與 portfolio.json 加總一致）。",
-    "與計畫相比：保守帳面高於 200 萬目標、積極低於 300 萬目標；可能尚有現金、未建倉部位，或需再平衡。若追求年底高獲利目標，須留意提高積極比重通常也提高波動與回撤風險。"
+    "計畫為「積極 250 萬／保守 250 萬」；2330 台積電已歸類積極。",
+    "目前股票帳面：積極約 227.7 萬、保守約 186.7 萬；距各 250 萬目標，積極尚差約 22.3 萬、保守尚差約 63.3 萬。"
   ]
 }
