@@ -2,7 +2,7 @@
   "00631L.TW": [
     {
       "shares": 2200,
-      "cost_per_share": 30.49,
+      "cost_per_share": 30.4895,
       "buy_date": "2026-05-06",
       "total_cost": 67077.0
     }
@@ -25,10 +25,10 @@
   ],
   "00981A.TW": [
     {
-      "shares": 30000,
+      "shares": 20000,
       "cost_per_share": 27.0928,
       "buy_date": "2026-05-06",
-      "total_cost": 812783.0
+      "total_cost": 541855.0
     }
   ],
   "00992A.TW": [
@@ -73,10 +73,10 @@
   ],
   "2880.TW": [
     {
-      "shares": 4000,
-      "cost_per_share": 34.5955,
+      "shares": 3000,
+      "cost_per_share": 34.5957,
       "buy_date": "2026-05-06",
-      "total_cost": 138382.0
+      "total_cost": 103787.0
     }
   ],
   "2883.TW": [
@@ -122,7 +122,7 @@
   "5880.TW": [
     {
       "shares": 2661,
-      "cost_per_share": 23.7627,
+      "cost_per_share": 23.7625,
       "buy_date": "2026-05-06",
       "total_cost": 63232.0
     }
@@ -133,14 +133,6 @@
       "cost_per_share": 49.0,
       "buy_date": "2026-05-06",
       "total_cost": 49.0
-    }
-  ],
-  "9945.TW": [
-    {
-      "shares": 247,
-      "cost_per_share": 18.4939,
-      "buy_date": "2026-05-06",
-      "total_cost": 4568.0
     }
   ]
 }

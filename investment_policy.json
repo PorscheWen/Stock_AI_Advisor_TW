@@ -42,28 +42,27 @@
     "2891.TW": "conservative",
     "3037.TW": "active",
     "5880.TW": "conservative",
-    "6757.TW": "active",
-    "9945.TW": "active"
+    "6757.TW": "active"
   },
   "book_cost_snapshot_ntd": {
     "source": "portfolio.json total_cost 加總依 symbol_buckets 分攤",
-    "active": 2277760,
-    "conservative": 1867097,
-    "total_equity_book_cost": 4144857
+    "active": 2002264,
+    "conservative": 1832502,
+    "total_equity_book_cost": 3834766
   },
   "gaps_vs_planned_ntd": {
     "planned_active": 2500000,
     "planned_conservative": 2500000,
-    "book_active": 2277760,
-    "book_conservative": 1867097,
-    "active_gap_to_planned": 222240,
-    "conservative_gap_to_planned": 632903,
-    "note": "差額＝計畫金額 − 目前股票帳面成本（正值代表該 bucket 尚須加碼約此數才達 250 萬）。兩項差額合計 855,143；另有預留現金 100 萬可作分批進場，與「股債／ETF 目標 500 萬」並列時，請避免同一筆錢重複計算。"
+    "book_active": 2002264,
+    "book_conservative": 1832502,
+    "active_gap_to_planned": 497736,
+    "conservative_gap_to_planned": 667498,
+    "note": "差額＝計畫金額 − 目前股票帳面成本（正值代表該 bucket 尚須加碼約此數才達 250 萬）。兩項差額合計 1,165,234；另有預留現金等請勿與股票部位重複計算。"
   },
   "alignment_notes": [
     "計畫為「積極 250 萬／保守 250 萬」；2330 台積電已歸類積極。",
-    "目前股票帳面（依 portfolio.json）：積極約 227.8 萬、保守約 186.7 萬；距各 250 萬目標，積極尚差約 22.2 萬、保守尚差約 63.3 萬。",
-    "總資金 600 萬（含預留現金 100 萬）；持股狀況已依券商「昨日庫存部位」截圖同步（2026-05-06）；主動群益科技創新代號以截圖 00992A 為準；凱基台灣 TOP50 截圖顯示 009816，檔案仍以上市代號 00918 建檔。",
+    "目前股票帳面（依 portfolio.json）：積極約 200.2 萬、保守約 183.3 萬；距各 250 萬目標，積極尚差約 49.8 萬、保守尚差約 66.7 萬。",
+    "總資金 600 萬（含預留現金 100 萬）；持股已依「昨日庫存部位」同步：00981A 調整為 2 萬股／541,855；2880 調整為 3,000 股／103,787；潤泰新（9945）已出清自檔案移除。",
     "全面持股以『庫存／庫存部位』為準；若僅有賣出或成交畫面，可能只反映部分標的，不作為整體持股依據。"
   ]
 }
