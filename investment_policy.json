@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "currency": "TWD",
   "as_of": "2026-05-06",
   "goals": {
@@ -26,43 +26,28 @@
     "conservative": "保守：指數型 ETF、REIT、金融配息等相對防禦或現金流取向（依您定義可改 bucket）。"
   },
   "symbol_buckets": {
-    "00631L.TW": "active",
-    "00712.TW": "conservative",
-    "00918.TW": "conservative",
     "00981A.TW": "active",
-    "00992A.TW": "active",
-    "1432.TW": "active",
-    "2330.TW": "active",
-    "2801.TW": "conservative",
-    "2812.TW": "conservative",
     "2880.TW": "conservative",
-    "2883.TW": "conservative",
-    "2884.TW": "conservative",
-    "2886.TW": "conservative",
-    "2891.TW": "conservative",
-    "3037.TW": "active",
-    "5880.TW": "conservative",
-    "6757.TW": "active",
     "9945.TW": "active"
   },
   "book_cost_snapshot_ntd": {
     "source": "portfolio.json total_cost 加總依 symbol_buckets 分攤",
-    "active": 2277760,
-    "conservative": 1867097,
-    "total_equity_book_cost": 4144857
+    "active": 275496,
+    "conservative": 34596,
+    "total_equity_book_cost": 310092
   },
   "gaps_vs_planned_ntd": {
     "planned_active": 2500000,
     "planned_conservative": 2500000,
-    "book_active": 2277760,
-    "book_conservative": 1867097,
-    "active_gap_to_planned": 222240,
-    "conservative_gap_to_planned": 632903,
-    "note": "差額＝計畫金額 − 目前股票帳面成本（正值代表該 bucket 尚須加碼約此數才達 250 萬）。兩項差額合計 855,143；另有預留現金 100 萬可作分批進場，與「股債／ETF 目標 500 萬」並列時，請避免同一筆錢重複計算。"
+    "book_active": 275496,
+    "book_conservative": 34596,
+    "active_gap_to_planned": 2224504,
+    "conservative_gap_to_planned": 2465404,
+    "note": "差額＝計畫金額 − 目前股票帳面成本（正值代表該 bucket 尚須加碼約此數才達 250 萬）。其餘資金可能在現金或其他資產。"
   },
   "alignment_notes": [
-    "計畫為「積極 250 萬／保守 250 萬」；2330 台積電已歸類積極。",
-    "目前股票帳面（依 portfolio.json）：積極約 227.8 萬、保守約 186.7 萬；距各 250 萬目標，積極尚差約 22.2 萬、保守尚差約 63.3 萬。",
-    "總資金 600 萬（含預留現金 100 萬）；持股狀況已依券商「昨日庫存部位」截圖同步（2026-05-06）；主動群益科技創新代號以截圖 00992A 為準；凱基台灣 TOP50 截圖顯示 009816，檔案仍以上市代號 00918 建檔。"
+    "計畫為「積極 250 萬／保守 250 萬」。",
+    "目前股票帳面（依 portfolio.json）：積極約 27.5 萬、保守約 3.5 萬；距各 250 萬目標差距甚大，代表大量資金尚未配置於股票或已轉出。",
+    "持股已依券商庫存截圖（3 檔）更新為 00981A、2880、9945。"
   ]
 }
