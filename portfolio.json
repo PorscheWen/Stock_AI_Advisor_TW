@@ -3,15 +3,15 @@
     {
       "shares": 2200,
       "cost_per_share": 30.49,
-      "buy_date": "2026-05-05",
-      "total_cost": 67078.0
+      "buy_date": "2026-05-06",
+      "total_cost": 67077.0
     }
   ],
   "00712.TW": [
     {
       "shares": 5000,
       "cost_per_share": 9.4408,
-      "buy_date": "2026-05-05",
+      "buy_date": "2026-05-06",
       "total_cost": 47204.0
     }
   ],
@@ -19,7 +19,7 @@
     {
       "shares": 27000,
       "cost_per_share": 10.6063,
-      "buy_date": "2026-05-05",
+      "buy_date": "2026-05-06",
       "total_cost": 286370.0
     }
   ],
@@ -27,23 +27,23 @@
     {
       "shares": 30000,
       "cost_per_share": 27.0928,
-      "buy_date": "2026-05-05",
+      "buy_date": "2026-05-06",
       "total_cost": 812783.0
     }
   ],
-  "00946.TW": [
+  "00992A.TW": [
     {
       "shares": 4000,
-      "cost_per_share": 17.9925,
-      "buy_date": "2026-05-05",
-      "total_cost": 71970.0
+      "cost_per_share": 18.0175,
+      "buy_date": "2026-05-06",
+      "total_cost": 72070.0
     }
   ],
   "1432.TW": [
     {
       "shares": 1,
       "cost_per_share": 35.0,
-      "buy_date": "2026-05-05",
+      "buy_date": "2026-05-06",
       "total_cost": 35.0
     }
   ],
@@ -51,7 +51,7 @@
     {
       "shares": 500,
       "cost_per_share": 2107.9,
-      "buy_date": "2026-05-05",
+      "buy_date": "2026-05-06",
       "total_cost": 1053950.0
     }
   ],
@@ -59,7 +59,7 @@
     {
       "shares": 42145,
       "cost_per_share": 20.4948,
-      "buy_date": "2026-05-05",
+      "buy_date": "2026-05-06",
       "total_cost": 863752.0
     }
   ],
@@ -67,7 +67,7 @@
     {
       "shares": 1797,
       "cost_per_share": 20.4235,
-      "buy_date": "2026-05-05",
+      "buy_date": "2026-05-06",
       "total_cost": 36700.0
     }
   ],
@@ -75,7 +75,7 @@
     {
       "shares": 4000,
       "cost_per_share": 34.5955,
-      "buy_date": "2026-05-05",
+      "buy_date": "2026-05-06",
       "total_cost": 138382.0
     }
   ],
@@ -83,7 +83,7 @@
     {
       "shares": 3000,
       "cost_per_share": 20.3283,
-      "buy_date": "2026-05-05",
+      "buy_date": "2026-05-06",
       "total_cost": 60985.0
     }
   ],
@@ -91,7 +91,7 @@
     {
       "shares": 2096,
       "cost_per_share": 32.1288,
-      "buy_date": "2026-05-05",
+      "buy_date": "2026-05-06",
       "total_cost": 67343.0
     }
   ],
@@ -99,7 +99,7 @@
     {
       "shares": 1000,
       "cost_per_share": 39.155,
-      "buy_date": "2026-05-05",
+      "buy_date": "2026-05-06",
       "total_cost": 39155.0
     }
   ],
@@ -107,23 +107,23 @@
     {
       "shares": 5000,
       "cost_per_share": 52.7948,
-      "buy_date": "2026-05-05",
+      "buy_date": "2026-05-06",
       "total_cost": 263974.0
     }
   ],
   "3037.TW": [
     {
       "shares": 300,
-      "cost_per_share": 889.9266666667,
+      "cost_per_share": 890.76,
       "buy_date": "2026-05-06",
-      "total_cost": 266978.0
+      "total_cost": 267228.0
     }
   ],
   "5880.TW": [
     {
       "shares": 2661,
       "cost_per_share": 23.7627,
-      "buy_date": "2026-05-05",
+      "buy_date": "2026-05-06",
       "total_cost": 63232.0
     }
   ],
@@ -131,7 +131,7 @@
     {
       "shares": 1,
       "cost_per_share": 49.0,
-      "buy_date": "2026-05-05",
+      "buy_date": "2026-05-06",
       "total_cost": 49.0
     }
   ],
@@ -139,7 +139,7 @@
     {
       "shares": 247,
       "cost_per_share": 18.4939,
-      "buy_date": "2026-05-05",
+      "buy_date": "2026-05-06",
       "total_cost": 4568.0
     }
   ]
