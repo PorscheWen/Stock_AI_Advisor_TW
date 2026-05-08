@@ -17,10 +17,10 @@
   ],
   "00918.TW": [
     {
-      "shares": 27000,
-      "cost_per_share": 10.6063,
+      "shares": 32000,
+      "cost_per_share": 11.14434375,
       "buy_date": "2026-05-06",
-      "total_cost": 286370.0
+      "total_cost": 356619.0
     }
   ],
   "00981A.TW": [
@@ -49,10 +49,10 @@
   ],
   "2330.TW": [
     {
-      "shares": 500,
-      "cost_per_share": 2107.9,
+      "shares": 540,
+      "cost_per_share": 2121.07037037,
       "buy_date": "2026-05-06",
-      "total_cost": 1053950.0
+      "total_cost": 1145378.0
     }
   ],
   "2801.TW": [
