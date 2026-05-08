@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "currency": "TWD",
   "as_of": "2026-05-06",
   "goals": {
@@ -28,7 +28,7 @@
   "symbol_buckets": {
     "00631L.TW": "active",
     "00712.TW": "conservative",
-    "00918.TW": "conservative",
+    "009816.TW": "conservative",
     "00981A.TW": "active",
     "00992A.TW": "active",
     "1432.TW": "active",
@@ -46,23 +46,23 @@
   },
   "book_cost_snapshot_ntd": {
     "source": "portfolio.json total_cost 加總依 symbol_buckets 分攤",
-    "active": 2093692,
-    "conservative": 1902751,
-    "total_equity_book_cost": 3996443
+    "active": 2002264,
+    "conservative": 1832502,
+    "total_equity_book_cost": 3834766
   },
   "gaps_vs_planned_ntd": {
     "planned_active": 2500000,
     "planned_conservative": 2500000,
-    "book_active": 2093692,
-    "book_conservative": 1902751,
-    "active_gap_to_planned": 406308,
-    "conservative_gap_to_planned": 597249,
-    "note": "差額＝計畫金額 − 目前股票帳面成本（正值代表該 bucket 尚須加碼約此數才達 250 萬）。兩項差額合計 1,003,557；另有預留現金等請勿與股票部位重複計算。"
+    "book_active": 2002264,
+    "book_conservative": 1832502,
+    "active_gap_to_planned": 497736,
+    "conservative_gap_to_planned": 667498,
+    "note": "差額＝計畫金額 − 目前股票帳面成本（正值代表該 bucket 尚須加碼約此數才達 250 萬）。兩項差額合計 1,165,234；另有預留現金等請勿與股票部位重複計算。"
   },
   "alignment_notes": [
     "計畫為「積極 250 萬／保守 250 萬」；2330 台積電已歸類積極。",
-    "目前股票帳面（依 portfolio.json）：積極約 209.4 萬、保守約 190.3 萬；距各 250 萬目標，積極尚差約 40.6 萬、保守尚差約 59.7 萬。",
-    "新建倉現買已併入：凱基台灣TOP50 追加 5,000 股／成本 70,249（檔案代號 00918）；台積電追加 40 股／成本 91,428。",
+    "目前股票帳面（依 portfolio.json）：積極約 200.2 萬、保守約 183.3 萬；距各 250 萬目標，積極尚差約 49.8 萬、保守尚差約 66.7 萬。",
+    "依券商『昨日庫存部位』同步：凱基台灣TOP50 代號修正為 009816（27,000 股／成本 286,370）；2330 台積電為 500 股／成本 1,053,950。先前檔內曾誤用 00918 代號與合併後股數，已以此庫存為準。",
     "全面持股以『庫存／庫存部位』為準；若僅有賣出或成交畫面，可能只反映部分標的，不作為整體持股依據。"
   ]
 }
