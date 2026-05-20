@@ -464,6 +464,352 @@ def cmd_summary_by_stock(portfolio: dict) -> None:
 
 
 # ──────────────────────────────────────────────
+# 功能七：個股投資分析報告
+# ──────────────────────────────────────────────
+
+def fetch_advisor_report(symbol: str) -> dict:
+    """取得個股完整投資分析資料（估值、技術、分析師）"""
+    formatted = format_symbol(symbol)
+    ticker = yf.Ticker(formatted)
+    info = ticker.info
+    fi = ticker.fast_info
+
+    price = (fi.get("last_price") or info.get("currentPrice")
+             or info.get("regularMarketPrice"))
+    prev_close = fi.get("previous_close") or price
+    change_pct = ((price - prev_close) / prev_close * 100) if (price and prev_close) else 0
+
+    week52_high = info.get("fiftyTwoWeekHigh")
+    week52_low  = info.get("fiftyTwoWeekLow")
+
+    pe          = info.get("trailingPE")
+    forward_pe  = info.get("forwardPE")
+    pb          = info.get("priceToBook")
+    eps         = info.get("trailingEps")
+    eps_growth  = info.get("earningsGrowth")
+    rev_growth  = info.get("revenueGrowth")
+    beta        = info.get("beta")
+    market_cap  = info.get("marketCap")
+
+    # 殖利率：用 dividendRate / price 自行計算以避免 yfinance 欄位不一致
+    div_rate    = info.get("dividendRate") or 0
+    div_yield   = (div_rate / price) if (div_rate and price) else 0
+    ex_div_ts   = info.get("exDividendDate")
+    ex_div_date = (
+        datetime.utcfromtimestamp(ex_div_ts).strftime("%Y-%m-%d")
+        if ex_div_ts else "N/A"
+    )
+
+    # 分析師共識
+    target_mean    = info.get("targetMeanPrice")
+    target_high    = info.get("targetHighPrice")
+    target_low     = info.get("targetLowPrice")
+    recommendation = info.get("recommendationKey") or "N/A"
+    num_analysts   = info.get("numberOfAnalystOpinions") or 0
+
+    # 技術指標：MA20 / MA60 / RSI(14)，從 6 個月歷史資料計算
+    hist = ticker.history(period="6mo")
+    ma20 = ma60 = rsi = None
+    if not hist.empty:
+        closes = hist["Close"]
+        if len(closes) >= 20:
+            ma20 = float(closes.rolling(20).mean().iloc[-1])
+        if len(closes) >= 60:
+            ma60 = float(closes.rolling(60).mean().iloc[-1])
+        if len(closes) >= 15:
+            delta = closes.diff()
+            gain  = delta.clip(lower=0).rolling(14).mean()
+            loss  = (-delta.clip(upper=0)).rolling(14).mean()
+            rs    = gain / loss
+            rsi   = float((100 - 100 / (1 + rs)).iloc[-1])
+
+    return {
+        "symbol": formatted,
+        "name": info.get("longName") or info.get("shortName", formatted),
+        "currency": info.get("currency", "TWD"),
+        "price": price, "change_pct": change_pct,
+        "week52_high": week52_high, "week52_low": week52_low,
+        "pe": pe, "forward_pe": forward_pe, "pb": pb,
+        "eps": eps, "eps_growth": eps_growth, "rev_growth": rev_growth,
+        "div_rate": div_rate, "div_yield": div_yield, "ex_div_date": ex_div_date,
+        "beta": beta, "market_cap": market_cap,
+        "target_mean": target_mean, "target_high": target_high, "target_low": target_low,
+        "recommendation": recommendation, "num_analysts": num_analysts,
+        "ma20": ma20, "ma60": ma60, "rsi": rsi,
+    }
+
+
+def _score_stock(d: dict) -> tuple:
+    """
+    基於量化指標計算投資評分（0–100）。
+    起點 50（中性），各指標加減分。
+    回傳 (score: int, comments: list[str])
+    """
+    score = 50
+    comments = []
+
+    price       = d.get("price")
+    high52      = d.get("week52_high")
+    low52       = d.get("week52_low")
+    pe          = d.get("pe")
+    forward_pe  = d.get("forward_pe")
+    pb          = d.get("pb")
+    div_yield   = d.get("div_yield", 0)
+    target_mean = d.get("target_mean")
+    rsi         = d.get("rsi")
+    ma20        = d.get("ma20")
+    ma60        = d.get("ma60")
+    eps_growth  = d.get("eps_growth")
+    rev_growth  = d.get("rev_growth")
+
+    # ── 1. 股價在 52 週區間的位置 ──────────────────
+    if price and high52 and low52 and (high52 > low52):
+        pos = (price - low52) / (high52 - low52) * 100
+        if pos < 25:
+            score += 15
+            comments.append(f"✅ 股價處於52週低檔 ({pos:.0f}%)，具安全邊際")
+        elif pos < 50:
+            score += 5
+            comments.append(f"📊 股價處於52週中低檔 ({pos:.0f}%)")
+        elif pos < 75:
+            score -= 5
+            comments.append(f"📊 股價處於52週中高檔 ({pos:.0f}%)")
+        else:
+            score -= 12
+            comments.append(f"⚠️ 股價接近52週高點 ({pos:.0f}%)，須注意回檔風險")
+
+    # ── 2. 本益比（半導體業參考值：合理 15–25x）──────
+    if pe:
+        if pe < 15:
+            score += 15
+            comments.append(f"✅ 本益比 {pe:.1f}x 偏低，具估值優勢")
+        elif pe < 25:
+            score += 5
+            comments.append(f"📊 本益比 {pe:.1f}x 屬合理範圍")
+        elif pe < 40:
+            score -= 5
+            comments.append(f"⚠️ 本益比 {pe:.1f}x 偏高，需成長性支撐")
+        else:
+            score -= 15
+            comments.append(f"⛔ 本益比 {pe:.1f}x 過高，估值風險大")
+    if forward_pe and pe and forward_pe < pe:
+        diff = (pe - forward_pe) / pe * 100
+        comments.append(f"✅ 遠期本益比 {forward_pe:.1f}x（低於TTM {diff:.0f}%），預期獲利改善")
+
+    # ── 3. 股價淨值比 ────────────────────────────────
+    if pb:
+        if pb < 1.5:
+            score += 10
+            comments.append(f"✅ 股價淨值比 {pb:.2f}x，低於淨值的折價機會")
+        elif pb < 3:
+            score += 3
+            comments.append(f"📊 股價淨值比 {pb:.2f}x，合理水準")
+        elif pb < 6:
+            comments.append(f"📊 股價淨值比 {pb:.2f}x，偏高但半導體業常見")
+        else:
+            score -= 8
+            comments.append(f"⚠️ 股價淨值比 {pb:.2f}x，溢價較高")
+
+    # ── 4. 殖利率 ─────────────────────────────────────
+    if div_yield > 0:
+        y = div_yield * 100
+        if y >= 5:
+            score += 10
+            comments.append(f"✅ 殖利率 {y:.2f}%，高息適合存股")
+        elif y >= 3:
+            score += 5
+            comments.append(f"📊 殖利率 {y:.2f}%，配息穩定")
+        elif y >= 1:
+            comments.append(f"📊 殖利率 {y:.2f}%，象徵性配息")
+        else:
+            comments.append(f"📊 殖利率極低，以資本利得為主要回報")
+    else:
+        comments.append("📊 目前無配息資料")
+
+    # ── 5. 分析師目標價 ──────────────────────────────
+    if target_mean and price and target_mean > 0:
+        upside = (target_mean - price) / price * 100
+        if upside >= 20:
+            score += 15
+            comments.append(f"✅ 分析師均價 {target_mean:.1f}，上漲空間 {upside:.1f}%")
+        elif upside >= 5:
+            score += 7
+            comments.append(f"✅ 分析師均價 {target_mean:.1f}，上漲空間 {upside:.1f}%")
+        elif upside >= -5:
+            comments.append(f"📊 分析師均價 {target_mean:.1f}（{upside:+.1f}%），接近現價")
+        else:
+            score -= 10
+            comments.append(f"⚠️ 分析師均價 {target_mean:.1f}（{upside:+.1f}%），有下行風險")
+
+    # ── 6. RSI(14) 動量 ──────────────────────────────
+    if rsi is not None:
+        if rsi < 30:
+            score += 12
+            comments.append(f"✅ RSI {rsi:.1f}，技術超賣，短線反彈機率高")
+        elif rsi < 45:
+            score += 4
+            comments.append(f"📊 RSI {rsi:.1f}，中性偏弱")
+        elif rsi < 60:
+            comments.append(f"📊 RSI {rsi:.1f}，正常區間")
+        elif rsi < 75:
+            score -= 5
+            comments.append(f"⚠️ RSI {rsi:.1f}，偏強，短線注意過熱")
+        else:
+            score -= 12
+            comments.append(f"⛔ RSI {rsi:.1f}，技術超買，短線回檔風險高")
+
+    # ── 7. 均線排列 ──────────────────────────────────
+    if ma20 is not None and price:
+        if ma60 is not None:
+            if price > ma20 > ma60:
+                score += 5
+                comments.append(f"✅ 多頭排列：現價 > MA20({ma20:.1f}) > MA60({ma60:.1f})")
+            elif price < ma20 < ma60:
+                score -= 5
+                comments.append(f"⚠️ 空頭排列：現價 < MA20({ma20:.1f}) < MA60({ma60:.1f})")
+            elif price > ma20:
+                comments.append(f"📊 站上MA20({ma20:.1f})，短線偏多")
+            else:
+                comments.append(f"📊 跌破MA20({ma20:.1f})，短線偏弱")
+        else:
+            if price > ma20:
+                score += 3
+                comments.append(f"📊 現價 > MA20({ma20:.1f})，短線偏多")
+            else:
+                score -= 3
+                comments.append(f"📊 現價 < MA20({ma20:.1f})，短線偏弱")
+
+    # ── 8. EPS / 營收成長 ────────────────────────────
+    if eps_growth is not None:
+        g = eps_growth * 100
+        if g >= 20:
+            score += 8
+            comments.append(f"✅ EPS年增率 {g:.1f}%，獲利快速成長")
+        elif g >= 0:
+            score += 2
+            comments.append(f"📊 EPS年增率 {g:.1f}%，溫和成長")
+        else:
+            score -= 6
+            comments.append(f"⚠️ EPS年增率 {g:.1f}%，獲利衰退中")
+    if rev_growth is not None:
+        g = rev_growth * 100
+        if g >= 15:
+            comments.append(f"✅ 營收年增率 {g:.1f}%，業績動能強勁")
+        elif g >= 0:
+            comments.append(f"📊 營收年增率 {g:.1f}%，穩健成長")
+        else:
+            comments.append(f"⚠️ 營收年增率 {g:.1f}%，營收下滑")
+
+    score = max(0, min(100, score))
+    return score, comments
+
+
+def _rating_label(score: int) -> str:
+    """將分數轉換為評級文字（含 ANSI 顏色）"""
+    if score >= 75:
+        return color("★★★★★  強力買進", "92")
+    elif score >= 65:
+        return color("★★★★☆  建議買進", "32")
+    elif score >= 50:
+        return color("★★★☆☆  中性持有", "33")
+    elif score >= 35:
+        return color("★★☆☆☆  建議觀望", "91")
+    else:
+        return color("★☆☆☆☆  不建議買入", "31")
+
+
+def cmd_advisor_report() -> None:
+    """互動：個股投資分析報告（量化評分）"""
+    print(f"\n{DIVIDER}")
+    print("【個股投資分析報告】")
+    print("輸入股票代號，多支以空格或逗號分隔（台股輸數字，美股輸英文）")
+    raw = input(">>> ").strip()
+    if not raw:
+        return
+
+    symbols = parse_symbols(raw)
+    for sym in symbols:
+        print(f"\n⏳ 正在分析 {sym}，請稍候...")
+        try:
+            d = fetch_advisor_report(sym)
+        except Exception as e:
+            print(f"  資料取得失敗：{e}")
+            continue
+
+        score, comments = _score_stock(d)
+        rating = _rating_label(score)
+
+        price      = d.get("price")
+        currency   = d.get("currency", "TWD")
+        change     = d.get("change_pct", 0)
+        pe         = d.get("pe")
+        forward_pe = d.get("forward_pe")
+        pb         = d.get("pb")
+        eps        = d.get("eps")
+        div_yield  = d.get("div_yield", 0)
+        rsi        = d.get("rsi")
+        ma20       = d.get("ma20")
+        ma60       = d.get("ma60")
+        target_mean= d.get("target_mean")
+        target_high= d.get("target_high")
+        target_low = d.get("target_low")
+        rec        = d.get("recommendation", "N/A").upper()
+        n_analysts = d.get("num_analysts", 0)
+        high52     = d.get("week52_high")
+        low52      = d.get("week52_low")
+        beta       = d.get("beta")
+        mktcap     = d.get("market_cap")
+        eps_g      = d.get("eps_growth")
+
+        print(f"\n{DIVIDER}")
+        print(f"  {d['symbol']}  {d['name']}")
+        if price:
+            print(f"  現價：{price:,.2f} {currency}  {fmt_change(change)}")
+        print(DIVIDER)
+
+        # ── 基本估值表 ──────────────────────────────────
+        rows = []
+        rows.append(["本益比 (TTM)",   f"{pe:.1f}x"    if pe else "N/A",
+                     "遠期本益比",      f"{forward_pe:.1f}x" if forward_pe else "N/A"])
+        rows.append(["股價淨值比",      f"{pb:.2f}x"    if pb else "N/A",
+                     "每股盈餘 EPS",   f"{eps:.2f}"    if eps else "N/A"])
+        rows.append(["殖利率",          f"{div_yield*100:.2f}%" if div_yield else "N/A",
+                     "EPS年增率",       f"{eps_g*100:.1f}%" if eps_g is not None else "N/A"])
+        rows.append(["RSI (14)",        f"{rsi:.1f}"    if rsi else "N/A",
+                     "Beta",            f"{beta:.2f}"   if beta else "N/A"])
+        rows.append(["MA20",            f"{ma20:.1f}"   if ma20 else "N/A",
+                     "MA60",            f"{ma60:.1f}"   if ma60 else "N/A"])
+        if high52 and low52:
+            rows.append(["52週高",      f"{high52:,.1f}",
+                         "52週低",      f"{low52:,.1f}"])
+        if target_mean:
+            rows.append(["分析師均價",  f"{target_mean:.1f}",
+                         "高/低目標",   f"{target_high:.1f} / {target_low:.1f}"
+                                         if target_high and target_low else "N/A"])
+        rows.append(["分析師評級",      rec,
+                     "評級人數",        f"{n_analysts} 人"])
+        if mktcap:
+            rows.append(["市值",        f"{mktcap/1e8:,.0f} 億 {currency}", "", ""])
+
+        print(tabulate(rows, tablefmt="simple", colalign=("left","right","left","right")))
+
+        # ── 量化評語 ─────────────────────────────────────
+        print(f"\n  ── 量化指標評語 ────────────────────────────")
+        for c in comments:
+            print(f"  {c}")
+
+        # ── 綜合評分 ─────────────────────────────────────
+        bar_filled = round(score / 5)
+        bar = "█" * bar_filled + "░" * (20 - bar_filled)
+        print(f"\n  ── 綜合評分 ─────────────────────────────────")
+        print(f"  [{bar}] {score}/100")
+        print(f"  評級：{rating}")
+        print(f"\n  ⚠️  本報告僅供量化參考，不構成投資建議。")
+        print(f"  ⚠️  投資前請結合產業動態、財報細節自行判斷。")
+        print(DIVIDER)
+
+
+# ──────────────────────────────────────────────
 # 主選單
 # ──────────────────────────────────────────────
 
@@ -477,6 +823,7 @@ MENU = """
 ║  4. 查看持股損益明細（每筆買入）         ║
 ║  5. 持股彙總（依股票合計）               ║
 ║  6. 刪除持股                             ║
+║  7. 個股投資分析報告（量化評分）         ║
 ║  0. 離開                                 ║
 ╚══════════════════════════════════════════╝
 """
@@ -501,6 +848,8 @@ def main() -> None:
             cmd_summary_by_stock(portfolio)
         elif choice == "6":
             cmd_remove_holding(portfolio)
+        elif choice == "7":
+            cmd_advisor_report()
         elif choice == "0":
             print("再見！")
             break
